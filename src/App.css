@@ -54,3 +54,7 @@ button, input {
 #dropdown-item-button::after {
   display:none;
 }
+
+.carousl-indicators {
+  display: none;
+}
