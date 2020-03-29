@@ -11,6 +11,7 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import emotion from "../assets/emotion.png"
 import tired from "../assets/tired.png"
 import sick from "../assets/sick.png"
+import {CopyToClipboard} from 'react-copy-to-clipboard';
 
 class Lobby extends Component {
 
@@ -36,11 +37,13 @@ class Lobby extends Component {
     );
 
     return (
-      <OverlayTrigger trigger="click" placement="right" overlay={popover}>
-        <Button className="w-50 mx-auto mb-4" variant="outline-light">
-          https://lintru.io/?8ssG6wnGKx9Q
-        </Button>
-      </OverlayTrigger>
+      <CopyToClipboard text={"https://lintru.io/?8ssG6wnGKx9Q"}>
+        <OverlayTrigger trigger="click" placement="right" overlay={popover}>
+            <Button className="w-50 mx-auto mb-4" variant="outline-light">
+              https://lintru.io/?8ssG6wnGKx9Q
+            </Button>
+        </OverlayTrigger>
+      </CopyToClipboard>
     );
   }
 
