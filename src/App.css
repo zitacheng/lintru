@@ -46,3 +46,11 @@ button, input {
   padding: 4px;
   border-width: 0px;
 }
+
+#dropdown-item-button {
+  width: 200px;
+}
+
+#dropdown-item-button::after {
+  display:none;
+}
