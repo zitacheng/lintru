@@ -36,3 +36,13 @@
     transform: rotate(360deg);
   }
 }
+
+.avatar {
+  width: 60px;
+}
+
+button, input {
+  border-radius: 13px;
+  padding: 4px;
+  border-width: 0px;
+}
