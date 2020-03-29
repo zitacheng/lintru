@@ -14,6 +14,18 @@ import sick from "../assets/sick.png"
 
 class Lobby extends Component {
 
+  constructor() {
+    super();
+
+    this.state = {
+      round: 4,
+      language: "French",
+      vote: 30,
+      think: 30
+    }
+
+  }
+
    copiedMsg() {
      const popover = (
       <Popover>
@@ -36,36 +48,36 @@ class Lobby extends Component {
     return (
       <Col sm={5}>
         <label>Rounds</label>
-        <DropdownButton variant="info" id="dropdown-item-button" title={4} className="mb-2">
-          <Dropdown.Item onClick={() => {console.log("chose")}}>3</Dropdown.Item>
-          <Dropdown.Item onClick={() => {console.log("chose")}}>4</Dropdown.Item>
-          <Dropdown.Item onClick={() => {console.log("chose")}}>5</Dropdown.Item>
-          <Dropdown.Item onClick={() => {console.log("chose")}}>6</Dropdown.Item>
-          <Dropdown.Item onClick={() => {console.log("chose")}}>7</Dropdown.Item>
-          <Dropdown.Item onClick={() => {console.log("chose")}}>8</Dropdown.Item>
+        <DropdownButton variant="info" id="dropdown-item-button" title={this.state.round} className="mb-2">
+          <Dropdown.Item onClick={() => { this.setState({round: 3}) }}>3</Dropdown.Item>
+          <Dropdown.Item onClick={() => { this.setState({round: 4}) }}>4</Dropdown.Item>
+          <Dropdown.Item onClick={() => { this.setState({round: 5}) }}>5</Dropdown.Item>
+          <Dropdown.Item onClick={() => { this.setState({round: 6}) }}>6</Dropdown.Item>
+          <Dropdown.Item onClick={() => { this.setState({round: 7}) }}>7</Dropdown.Item>
+          <Dropdown.Item onClick={() => { this.setState({round: 8}) }}>8</Dropdown.Item>
         </DropdownButton>
         <label>Time to think in seconds</label>
-        <DropdownButton variant="info" id="dropdown-item-button" title={30} className="mb-2">
-          <Dropdown.Item onClick={() => {console.log("chose")}}>40</Dropdown.Item>
-          <Dropdown.Item onClick={() => {console.log("chose")}}>50</Dropdown.Item>
-          <Dropdown.Item onClick={() => {console.log("chose")}}>60</Dropdown.Item>
-          <Dropdown.Item onClick={() => {console.log("chose")}}>70</Dropdown.Item>
-          <Dropdown.Item onClick={() => {console.log("chose")}}>80</Dropdown.Item>
-          <Dropdown.Item onClick={() => {console.log("chose")}}>90</Dropdown.Item>
+        <DropdownButton variant="info" id="dropdown-item-button" title={this.state.think} className="mb-2">
+          <Dropdown.Item onClick={() => { this.setState({think: 40}) }}>40</Dropdown.Item>
+          <Dropdown.Item onClick={() => { this.setState({think: 50}) }}>50</Dropdown.Item>
+          <Dropdown.Item onClick={() => { this.setState({think: 60}) }}>60</Dropdown.Item>
+          <Dropdown.Item onClick={() => { this.setState({think: 70}) }}>70</Dropdown.Item>
+          <Dropdown.Item onClick={() => { this.setState({think: 80}) }}>80</Dropdown.Item>
+          <Dropdown.Item onClick={() => { this.setState({think: 90}) }}>90</Dropdown.Item>
         </DropdownButton>
         <label>Time to vote in seconds</label>
-        <DropdownButton variant="info" id="dropdown-item-button" title={30} className="mb-2">
-          <Dropdown.Item onClick={() => {console.log("chose")}}>40</Dropdown.Item>
-          <Dropdown.Item onClick={() => {console.log("chose")}}>50</Dropdown.Item>
-          <Dropdown.Item onClick={() => {console.log("chose")}}>60</Dropdown.Item>
-          <Dropdown.Item onClick={() => {console.log("chose")}}>70</Dropdown.Item>
-          <Dropdown.Item onClick={() => {console.log("chose")}}>80</Dropdown.Item>
-          <Dropdown.Item onClick={() => {console.log("chose")}}>90</Dropdown.Item>
+        <DropdownButton variant="info" id="dropdown-item-button" title={this.state.vote} className="mb-2">
+          <Dropdown.Item onClick={() => { this.setState({vote: 40}) }}>40</Dropdown.Item>
+          <Dropdown.Item onClick={() => { this.setState({vote: 50}) }}>50</Dropdown.Item>
+          <Dropdown.Item onClick={() => { this.setState({vote: 60}) }}>60</Dropdown.Item>
+          <Dropdown.Item onClick={() => { this.setState({vote: 70}) }}>70</Dropdown.Item>
+          <Dropdown.Item onClick={() => { this.setState({vote: 80}) }}>80</Dropdown.Item>
+          <Dropdown.Item onClick={() => { this.setState({vote: 90}) }}>90</Dropdown.Item>
         </DropdownButton>
         <label>Language</label>
-        <DropdownButton variant="info" id="dropdown-item-button" title={"French"} className="mb-2">
-          <Dropdown.Item onClick={() => {console.log("chose")}}>English</Dropdown.Item>
-          <Dropdown.Item onClick={() => {console.log("chose")}}>French</Dropdown.Item>
+        <DropdownButton variant="info" id="dropdown-item-button" title={this.state.language} className="mb-2">
+          <Dropdown.Item onClick={() => { this.setState({language: "English"}) }}>English</Dropdown.Item>
+          <Dropdown.Item onClick={() => { this.setState({language: "French"}) }}>French</Dropdown.Item>
         </DropdownButton>
       </Col>
     );
