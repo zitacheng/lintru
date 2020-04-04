@@ -4,6 +4,9 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import io from 'socket.io-client';
+
+global.socket = io('http://localhost:3001');
 
 ReactDOM.render(
   <App />,

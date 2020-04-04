@@ -11,7 +11,7 @@ function App() {
       <Router>
         <Switch>
           <Route exact path="/" component={Home} />
-          <Route exact path="/lobby" component={Lobby} />
+          <Route exact path="/lobby/:key" component={Lobby} />
           <Route exact path="/game" component={Game} />
         </Switch>
       </Router>
