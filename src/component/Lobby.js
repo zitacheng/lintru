@@ -15,16 +15,34 @@ import {CopyToClipboard} from 'react-copy-to-clipboard';
 
 class Lobby extends Component {
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
       round: 4,
       language: "French",
       vote: 30,
-      think: 30
+      think: 30,
+      key: props.match.params.key,
+      players: []
     }
 
+    global.socket.emit('getPlayers', this.state.key);
+  }
+
+  componentDidMount() {
+    global.socket.on('getPlaysersSuccess', (data) => {
+
+      if (data.success)
+      {
+        console.log("getPlaysersSuccess data =", data);
+        this.setState({players: data.players});
+
+      }
+      else {
+        console.log("show message", data.msg);
+      }
+    });
   }
 
    copiedMsg() {
@@ -99,18 +117,15 @@ class Lobby extends Component {
               {this.settings()}
               <Col sm={7}>
                 <Row >
-                  <Col className="mx-auto" sm={4}>
-                    <img alt="avatar" className="avatar" src={emotion} />
-                    <p className="text-center">Zita</p>
-                  </Col>
-                  <Col className="mx-auto" sm={4}>
-                    <img alt="avatar" className="avatar" src={tired} />
-                    <p className="text-center">Titi</p>
-                  </Col>
-                  <Col className="mx-auto" sm={4}>
-                    <img alt="avatar" className="avatar" src={sick} />
-                    <p className="text-center">Mel</p>
-                  </Col>
+                  {this.state.players.map((player, idx) => {
+                      return (
+                        <Col className="mx-auto" sm={4} key={idx}>
+                          <img alt="avatar" className="avatar" src={emotion} />
+                          <p className="text-center">{player.name}</p>
+                        </Col>
+                      )
+                    })
+                  }
                 </Row>
               </Col>
             </Row>

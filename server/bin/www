@@ -42,29 +42,27 @@ var db = mongoose.connection;
 
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
-  console.log("SUCCESSFUL");
 
   var playerSchema = new mongoose.Schema({
     name: String,
     admin: Boolean,
     avatar: String,
     word: String,
-    intru: Boolean
+    intru: Boolean,
+    lobbyKey: String
   });
 
   mongoose.model('Player', playerSchema);
 
-  var gameeSchema = new mongoose.Schema({
+  var gameSchema = new mongoose.Schema({
     url: String,
-    admin: Number,
     round: Number,
     timeThink: Number,
     timeVote: Number,
     lang: String,
-    players: Number
   });
 
-  mongoose.model('Game', gameeSchema);
+  mongoose.model('Game', gameSchema);
 });
 
 /**
@@ -74,31 +72,149 @@ db.once('open', function() {
 const io = require('socket.io')(server);
 var shortid = require('shortid');
 
+var allClients = [];
+
+var globalData = {
+  lobbyList: [],
+  listPlayer: [],
+};
+
 
 io.on('connection', (socket) => {
 
+  require('../socket')(socket, globalData);
+
+  // socket.test = "hello";
+  // socket.testtest = "hellozita";
+  // socket.emit('addPlayerSuccess', ({success: false, msg: "failede to create lobby"}));
+
+  // console.log("got connection", socket.id);
+  //
+  // socket.on('disconnect', function(client) {
+  //   console.log('Got disconnect!', client);
+  //
+  //   // var i = allClients.indexOf(elem);
+  //   // console.log("elem", elem);
+  //   // console.log("elem", i);
+  //     // allClients.splice(i, 1);
+  // });
+
+  // socket.on('addPlayer', function(client) {
+  //   console.log('Got addPlayer!', client);
+  //   socket.emit('addPlayerSuccess', ({success: true, params: {pam: 1, pamfe: 2}}));
+  //
+  //   // var i = allClients.indexOf(elem);
+  //   // console.log("elem", elem);
+  //   // console.log("elem", i);
+  //     // allClients.splice(i, 1);
+  // });
+
+
+  // allClients.push(socket);
+  // console.log("all client", socket);
+
+  // var Player = require('mongoose').model('Player');
+  // var Game = require('mongoose').model('Game');
+
+  // Game.deleteMany({ round: 4 }, function (err) {
+  //   console.log("inside delte");
+  //
+  // });
+
+  // Game.find({}, function(err, result){
+  //   console.log("All Game = ", result)
+  // });
+  //
+  // Player.find({}, function(err, result){
+  //   console.log("All players = ", result)
+  // });
+
   //Add player
-   socket.on('addPlayer', (name, avatar, admin) => {
+   // socket.on('addPlayer', (name, avatar, key) => {
 
-      var id = shortid.generate();
-      console.log(id)
+      // var id = shortid.generate();
+      // console.log(id)
 
-      var Player = require('mongoose').model('Player');
+      //New player and New lobby
+   //    if (!key) {
+   //
+   //      new Game({
+   //        url: id,
+   //        round: 4,
+   //        timeThink: 30,
+   //        timeVote: 30,
+   //        lang: 'fr',
+   //      }).save(function (err, theGame) {
+   //        if (err) {
+   //          console.log("ERR =", err)
+   //          socket.emit('addPlayerSuccess', ({success: false, msg: "failede to create lobby"}));
+   //        }
+   //        else {
+   //          new Player({
+   //            name: name,
+   //            admin: true,
+   //            avatar: avatar,
+   //            word: null,
+   //            intru: false,
+   //            lobbyKey: id
+   //          }).save(function (err, thePlayer) {
+   //              if (err)
+   //                socket.emit('addPlayerSuccess', ({success: false, msg: "failede to save player"}));
+   //              else {
+   //                socket.emit('addPlayerSuccess', ({success: true, player: thePlayer}));
+   //              }
+   //          });
+   //        }
+   //      });
+   //    }
+   //    else { //player that join an existing lobby
+   //      // Game.fint({ url: key}); //TODO check if the url is coorect by searching in lobby model
+   //
+   //      // Let's say the url is correct for now
+   //      //Creating new player
+   //      new Player({
+   //        name: name,
+   //        admin: false,
+   //        avatar: avatar,
+   //        word: null,
+   //        intru: false,
+   //        lobbyKey: key
+   //      }).save(function (err, thePlayer) {
+   //        if (err)
+   //          socket.emit('addPlayerSuccess', ({success: false, msg: "failede to save player"}));
+   //        else {
+   //          Player.find({lobbyKey: key}, function(err, dataPlayers){
+   //            if (!err) {
+   //              socket.emit('addPlayerSuccess', ({success: true, player: thePlayer}));
+   //              console.log("emit !!")
+   //              socket.emit('getPlaysersSuccess', ({success: true, players: dataPlayers}));
+   //            }
+   //          });
+   //        }
+   //      });
+   //    }
+   //
+   // });
 
-      new Player({
-        name: name,
-        admin: admin,
-        avatar: avatar,
-        word: null,
-        intru: false
-      }).save(function (err, fluffy) {
-        console.log("fluffy = ", fluffy);
-        if (err)
-          socket.emit('addPlayerSuccess', ({success: false, msg: "failede to save data"}));
-        else
-          socket.emit('addPlayerSuccess', ({success: true, id: "ngI6AVR6p"}));
-      });;
-   });
+   //Get player of lobby
+    // socket.on('getPlayers', (key) => {
+    //   Game.find({url: key}, function(err, dataGame){
+    //       if (err || dataGame.length == 0) {
+    //           console.log(err);
+    //           socket.emit('getPlaysersSuccess', ({success: false, msg: "failede to find lobby"}));
+    //       }
+    //       else {
+    //         //Now that the game exist find every player of this room
+    //         Player.find({lobbyKey: key}, function(err, dataPlayers){
+    //           if (err)
+    //             socket.emit('getPlaysersSuccess', ({success: false, msg: "faile find Players"}));
+    //           else
+    //             socket.emit('getPlaysersSuccess', ({success: true, game: dataGame, players: dataPlayers}));
+    //       });
+    //     }
+    //   })
+    // });
+
 });
 
 /**

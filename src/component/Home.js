@@ -12,8 +12,10 @@ class Home extends Component {
     super(props);
 
     console.log("props = ", props)
+    console.log("props key = ", props.match.params.key) //TODO if undefined admin true else if (key exist on database ) admin false  else false
     this.state = {
-      username: ''
+      username: '',
+      key: props.match.params.key
     }
     this.handleChange = this.handleChange.bind(this);
   }
@@ -47,18 +49,50 @@ class Home extends Component {
   //   }
   // }
 
-  loginUser() {
+  loginUserCreate() {
     // console.log("global socket = ", global.socket);
 
     //TODO display error if name empty
-    global.socket.emit('addPlayer', this.state.username, "dead.png", true);
+    //TODO check name length
+    // global.socket.emit('addPlayer', this.state.username, "dead.png", this.state.key);
+    // global.socket.on('addPlayerSuccess', (data) => {
+    //   if (data.success)
+    //   {
+    //     if (!this.state.key)
+    //       window.location = "/lobby/" + data.player.lobbyKey;
+    //     else
+    //       window.location = "/lobby/" + this.state.key; //TODO let's say it's correct
+    //   }
+    //   else {
+    //     console.log("show message")
+    //   }
+    // });
+
+    global.socket.emit('addPlayer', this.state.username, "dead.png", this.state.key);
     global.socket.on('addPlayerSuccess', (data) => {
-      console.log("Data = ", data);
-      if (data.success)
-         window.location = "/lobby/" + data.id;
-      else {
-        console.log("show message")
-      }
+      console.log("socket = ", global.socket);
+      console.log("data = ", data);
+    });
+    global.socket.emit('createLobby', this.state.key);
+    global.socket.on('createLobbySuccess', (data) => {
+      console.log("socket2 = ", global.socket);
+      console.log("createLobby = ", data);
+      window.location = "/lobby/" + this.response.key;
+    });
+  }
+
+  loginUserJoin() {
+
+    global.socket.emit('addPlayer', this.state.username, "dead.png", this.state.key);
+    global.socket.on('addPlayerSuccess', (data) => {
+      console.log("socket = ", global.socket);
+      console.log("data = ", data);
+    });
+    global.socket.emit('joinLobby', this.state.key);
+    global.socket.on('joinLobbySuccess', (data) => {
+      console.log("socket = ", global.socket);
+      console.log("joinLobbySuccess = ", data);
+      // window.location = "/lobby/" + this.response.key;
     });
   }
 
@@ -100,7 +134,10 @@ class Home extends Component {
               </Carousel>
             </Col>
             <Button className="mt-3" variant="outline-warning" onClick={() => {
-                this.loginUser();
+                if (!this.state.key)
+                  this.loginUserCreate();
+                else
+                  this.loginUserJoin();
               }}>Create private room</Button>
           </Card.Body>
         </Card>
