@@ -1,21 +1,22 @@
 const Lobby = require('../Entity/Lobby');
 
-module.exports = (socket, globalData) => {
+module.exports = (socket, globalData, io) => {
 
   // Create Room
   socket.on('createLobby', () => {
     if (socket.player) {
       if (!socket.lobby) {
         socket.player.admin = true;
-        console.log("inside create lobby");
         socket.lobby = new Lobby();
-        console.log("new lobby");
         socket.lobby.addPlayer(socket.player);
-        console.log("addPlayer");
-        socket.join(socket.lobby.key);
-        console.log("after join ", socket.lobby.key);
+        console.log("lobby key = ", socket.lobby.key);
+        socket.join(socket.lobby.key, function () {
+          console.log(socket.id + " now in rooms ", socket.rooms);
+        });
+        // console.log("After join key = ", socket.lobby.key);
+        // console.log("NAMESPACE = ", socket);
+        // console.log("cretae socket only", socket);
         globalData.lobbyList.push(socket.lobby);
-        console.log("globalData push  ", globalData.lobbyList);
         socket.emit('createLobbySuccess', {success: true, response: socket.lobby.toResult()});
         console.log("User " + socket.player.userName + " created the lobby " + socket.lobby.key);
       } else {
@@ -25,17 +26,31 @@ module.exports = (socket, globalData) => {
   });
 
   // Join Room if the user has been created and he is not already in a room.
-  socket.on('joinLobby', (req) => {
+  socket.on('joinLobby', (key) => {
+
     if (socket.player && !socket.lobby) {
       let lobby = globalData.lobbyList.find((lobbyFind) => {
-        return lobbyFind.key === req.key;
+        return lobbyFind._key === key;
       });
-      if (lobby && lobby.started === false) {
+      if (lobby && lobby._start === false) {
         try {
-          lobby.addUser(socket.player);
+          lobby.addPlayer(socket.player);
           socket.lobby = lobby;
-          socket.join(socket.lobby.key);
-          socket.emit('joinLobbySuccess', {success: true, response: socket.lobby.toResult()});
+          socket.join(socket.lobby._key);
+          socket.emit('joinLobbySuccess', {success: true, response: lobby.toResult()});
+          // console.log(" globalData.listplayer = ",  globalData.listPlayer);
+          // console.log(" lobby d= ",  lobby._key);
+          socket.to(lobby._key).emit('newJoin', {response: lobby.toResult()});
+
+          console.log("READY 1=> ", io.sockets.sockets);
+          console.log("READY 2=> ", io.sockets.sockets.rooms);
+          // globalData.listPlayer.forEach(function(player) {
+          //   console.log("player ", player);
+          //   console.log("socket.player._id ", socket.player._id);
+          //   if (player.id !== socket.player._id) {
+          //     // user.socket.emit('msgGlobal', {userFrom: socket.user.userName, msg: req.msg});
+          //   }
+          // });
           console.log("User " + socket.player.userName + " joined the lobby " + socket.lobby.key + ".");
         }
         catch (e) {
@@ -43,9 +58,9 @@ module.exports = (socket, globalData) => {
           socket.emit('joinLobbySuccess', {success: false, response: e});
         }
       } else {
-        console.log("Lobby " + req.key + " does not exists");
+        console.log("Lobby " + key + " does not exists");
         console.log(globalData.roomList);
-        socket.emit('joinLobbySuccess', {success: false, response: 'Lobby ' + req.key + ' does not exists.'});
+        socket.emit('joinLobbySuccess', {success: false, response: 'Lobby ' + key + ' does not exists.'});
       }
     }
   });

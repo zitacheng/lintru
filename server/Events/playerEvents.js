@@ -9,7 +9,7 @@ module.exports = (socket, globalData) => {
       socket.player = new Player(name, socket, avatar, urlKey);
       socket.emit('addPlayerSuccess', {success: true, response: socket.player.toResult()});
       console.log("new player created ", socket.player);
-      globalData.listPlayer.push(socket.player);
+      globalData.listPlayer.push(socket);
     } else {
       socket.emit('addPlayerSuccess', {success: true, response: socket.player.toResult()});
     }
@@ -36,23 +36,25 @@ module.exports = (socket, globalData) => {
 
   // Client disconnect
   socket.on('disconnect', () => {
+    console.log("socker logout name = ", socket.player)
     if (socket.player) {
       if (socket.lobby) {
         // If the lobby has only one user, we are removing the lobby.
         if (socket.lobby.players.length === 1) {
           let lobbyIdx = globalData.lobbyList.indexOf(socket.lobby);
-          if (lobbyIdx !== -1) {
-            globalData.lobbyList.splice(lobbyIdx, 1);
-          }
+          console.log("before splice");  //TODO
+          // if (lobbyIdx !== -1) {
+          //   globalData.lobbyList.splice(lobbyIdx, 1);
+          // }
         } else{
           // TODO: Set the next player to admin.
-          let userTarget = socket.lobby.players.find(function (player) {
-              return player.socket === socket;
+          let userTarget = socket.lobby._players.find(function (player) {
+              return player._id === socket.id;
           });
-          socket.lobby.removePlayer(userTarget.username);
+          socket.lobby.removePlayer(userTarget);
         }
       }
-      console.log("logout ", globalData);
+      console.log("logout ");
     }
   });
 };

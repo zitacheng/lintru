@@ -82,7 +82,7 @@ var globalData = {
 
 io.on('connection', (socket) => {
 
-  require('../socket')(socket, globalData);
+  require('../socket')(socket, globalData, io);
 
   // socket.test = "hello";
   // socket.testtest = "hellozita";

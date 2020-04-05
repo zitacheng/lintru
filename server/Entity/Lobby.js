@@ -117,7 +117,7 @@ class Lobby {
     this._players.push(player);
   }
 
-  removeUser(player) {
+  removePlayer(player) {
     // TODO: Remove user by username.
     // If the user is admin, we need to pass the role to someone else.
     // If no user, throw an error.
@@ -125,7 +125,7 @@ class Lobby {
       throw "User does not exist";
     }
     else {
-      this._players.splice(list.indexOf(user), 1);
+      this._players.splice(this._players.indexOf(player), 1);
     }
   }
 

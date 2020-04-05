@@ -18,32 +18,47 @@ class Lobby extends Component {
   constructor(props) {
     super(props);
 
+    console.log("player, ", props.location.state.game)
+
     this.state = {
       round: 4,
       language: "French",
       vote: 30,
       think: 30,
       key: props.match.params.key,
-      players: []
+      players: props.location.state.game.players
     }
-
-    global.socket.emit('getPlayers', this.state.key);
+    console.log("Playes = ", this.state.players)
+    // global.socket.emit('getPlayers', this.state.key);
+    global.socket.on("newJoin", (data) => {
+        console.log("New join data 1= ", data)
+    });
   }
 
   componentDidMount() {
-    global.socket.on('getPlaysersSuccess', (data) => {
+    // refresh users
 
-      if (data.success)
-      {
-        console.log("getPlaysersSuccess data =", data);
-        this.setState({players: data.players});
+      // global.socket.reconnect();
 
-      }
-      else {
-        console.log("show message", data.msg);
-      }
+    global.socket.on("newJoin", (data) => {
+        console.log("New join data 2= ", data)
     });
   }
+
+  // componentDidMount() {
+  //   global.socket.on('getPlaysersSuccess', (data) => {
+  //
+  //     if (data.success)
+  //     {
+  //       console.log("getPlaysersSuccess data =", data);
+  //       this.setState({players: data.players});
+  //
+  //     }
+  //     else {
+  //       console.log("show message", data.msg);
+  //     }
+  //   });
+  // }
 
    copiedMsg() {
      const popover = (
@@ -117,11 +132,11 @@ class Lobby extends Component {
               {this.settings()}
               <Col sm={7}>
                 <Row >
-                  {this.state.players.map((player, idx) => {
+                  {this.state.players && this.state.players.map((player, idx) => {
                       return (
                         <Col className="mx-auto" sm={4} key={idx}>
                           <img alt="avatar" className="avatar" src={emotion} />
-                          <p className="text-center">{player.name}</p>
+                          <p className="text-center">{player._userName}</p>
                         </Col>
                       )
                     })

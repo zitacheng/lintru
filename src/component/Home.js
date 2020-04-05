@@ -5,6 +5,7 @@ import Container from 'react-bootstrap/Container';
 import Col from 'react-bootstrap/Col';
 import Carousel from 'react-bootstrap/Carousel';
 import { login } from "../request.js"
+import history from './../history';
 
 class Home extends Component {
 
@@ -77,7 +78,9 @@ class Home extends Component {
     global.socket.on('createLobbySuccess', (data) => {
       console.log("socket2 = ", global.socket);
       console.log("createLobby = ", data);
-      window.location = "/lobby/" + this.response.key;
+      // window.location = "/lobby/" + this.response.key;
+      if (data.success)
+        history.push({pathname: '/lobby/' +  data.response.key, state: {game: data.response}});
     });
   }
 
@@ -92,7 +95,8 @@ class Home extends Component {
     global.socket.on('joinLobbySuccess', (data) => {
       console.log("socket = ", global.socket);
       console.log("joinLobbySuccess = ", data);
-      // window.location = "/lobby/" + this.response.key;
+      if (data.success)
+        history.push({pathname: '/lobby/' + this.state.key, state: {game: data.response}});
     });
   }
 

@@ -10,7 +10,6 @@ class Player {
     this._avatar = avatar;
     this._word = null;
     this._intru = false;
-    this._lobbyKey = null;
   }
   //TODO test and add rest of the getter and setter
 
@@ -98,23 +97,6 @@ class Player {
   }
 
   /**
-   * Get the lobbyKey
-   * @returns {string}
-   */
-  get lobbyKey() {
-    return this._lobbyKey;
-  }
-
-  /**
-   * Set the word
-   * @param lobbyKey
-   */
-  set lobbyKey(lobbyKey) {
-    this._lobbyKey = lobbyKey;
-    console.log("User lobbyKey set to " + lobbyKey);
-  }
-
-  /**
    * Get true if the user is intru.
    * @returns {boolean}
    */
@@ -137,7 +119,6 @@ class Player {
       avatar: this._avatar,
       word: this._word,
       intru: this._intru,
-      lobbyKey: this._lobbyKey,
     };
   }
 }
