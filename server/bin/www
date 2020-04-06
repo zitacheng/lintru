@@ -84,43 +84,6 @@ io.on('connection', (socket) => {
 
   require('../socket')(socket, globalData, io);
 
-  // socket.test = "hello";
-  // socket.testtest = "hellozita";
-  // socket.emit('addPlayerSuccess', ({success: false, msg: "failede to create lobby"}));
-
-  // console.log("got connection", socket.id);
-  //
-  // socket.on('disconnect', function(client) {
-  //   console.log('Got disconnect!', client);
-  //
-  //   // var i = allClients.indexOf(elem);
-  //   // console.log("elem", elem);
-  //   // console.log("elem", i);
-  //     // allClients.splice(i, 1);
-  // });
-
-  // socket.on('addPlayer', function(client) {
-  //   console.log('Got addPlayer!', client);
-  //   socket.emit('addPlayerSuccess', ({success: true, params: {pam: 1, pamfe: 2}}));
-  //
-  //   // var i = allClients.indexOf(elem);
-  //   // console.log("elem", elem);
-  //   // console.log("elem", i);
-  //     // allClients.splice(i, 1);
-  // });
-
-
-  // allClients.push(socket);
-  // console.log("all client", socket);
-
-  // var Player = require('mongoose').model('Player');
-  // var Game = require('mongoose').model('Game');
-
-  // Game.deleteMany({ round: 4 }, function (err) {
-  //   console.log("inside delte");
-  //
-  // });
-
   // Game.find({}, function(err, result){
   //   console.log("All Game = ", result)
   // });

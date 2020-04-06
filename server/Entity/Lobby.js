@@ -147,7 +147,7 @@ class Lobby {
 
     return {
       key: this._key,
-      players: this._players,
+      players: players,
       round: this._round,
       timeThink: this._timeThink,
       timeVote: this._timeVote,

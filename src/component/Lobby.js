@@ -25,40 +25,25 @@ class Lobby extends Component {
       language: "French",
       vote: 30,
       think: 30,
-      key: props.match.params.key,
+      key: props.location.state.game.key,
       players: props.location.state.game.players
     }
     console.log("Playes = ", this.state.players)
     // global.socket.emit('getPlayers', this.state.key);
-    global.socket.on("newJoin", (data) => {
-        console.log("New join data 1= ", data)
-    });
+    // global.socket.on("join/" + this.state.key, (data) => {
+    //     console.log("New join data 1 = ", data);
+    //     this.setState({players: data.players})
+    // });
   }
 
   componentDidMount() {
-    // refresh users
-
-      // global.socket.reconnect();
-
-    global.socket.on("newJoin", (data) => {
-        console.log("New join data 2= ", data)
+    global.socket.on("join/" + this.state.key, (data) => {
+        console.log("New join data 1 = ", data);
+        this.setState({players: data.lobby.players});
+        console.log("data.players = ", data.lobby.players);
+        console.log("tplayers = ", this.state.players);
     });
   }
-
-  // componentDidMount() {
-  //   global.socket.on('getPlaysersSuccess', (data) => {
-  //
-  //     if (data.success)
-  //     {
-  //       console.log("getPlaysersSuccess data =", data);
-  //       this.setState({players: data.players});
-  //
-  //     }
-  //     else {
-  //       console.log("show message", data.msg);
-  //     }
-  //   });
-  // }
 
    copiedMsg() {
      const popover = (
