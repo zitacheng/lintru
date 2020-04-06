@@ -41,6 +41,13 @@
   width: 60px;
 }
 
+.crown {
+  width: 60px;
+  position: absolute;
+  top: -38px;
+  left: 80px;
+}
+
 button, input {
   border-radius: 13px;
   padding: 4px;

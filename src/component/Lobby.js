@@ -9,6 +9,7 @@ import DropdownButton from 'react-bootstrap/DropdownButton';
 import Dropdown from 'react-bootstrap/Dropdown';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import emotion from "../assets/emotion.png"
+import admin from "../assets/admin.gif"
 import tired from "../assets/tired.png"
 import sick from "../assets/sick.png"
 import {CopyToClipboard} from 'react-copy-to-clipboard';
@@ -18,30 +19,24 @@ class Lobby extends Component {
   constructor(props) {
     super(props);
 
-    console.log("player, ", props.location.state.game)
-
     this.state = {
       round: 4,
       language: "French",
       vote: 30,
       think: 30,
       key: props.location.state.game.key,
-      players: props.location.state.game.players
+      players: props.location.state.game.players,
+      client:  props.location.state.player
     }
-    console.log("Playes = ", this.state.players)
-    // global.socket.emit('getPlayers', this.state.key);
-    // global.socket.on("join/" + this.state.key, (data) => {
-    //     console.log("New join data 1 = ", data);
-    //     this.setState({players: data.players})
-    // });
+
+    console.log("client = ", this.state.client);
+    console.log("players = ", this.state.players);
   }
 
   componentDidMount() {
     global.socket.on("join/" + this.state.key, (data) => {
         console.log("New join data 1 = ", data);
         this.setState({players: data.lobby.players});
-        console.log("data.players = ", data.lobby.players);
-        console.log("tplayers = ", this.state.players);
     });
   }
 
@@ -69,7 +64,7 @@ class Lobby extends Component {
     return (
       <Col sm={5}>
         <label>Rounds</label>
-        <DropdownButton variant="info" id="dropdown-item-button" title={this.state.round} className="mb-2">
+        <DropdownButton variant="info" id="dropdown-item-button" title={this.state.round} className="mb-2" disabled={this.state.client.admin ? false : true}>
           <Dropdown.Item onClick={() => { this.setState({round: 3}) }}>3</Dropdown.Item>
           <Dropdown.Item onClick={() => { this.setState({round: 4}) }}>4</Dropdown.Item>
           <Dropdown.Item onClick={() => { this.setState({round: 5}) }}>5</Dropdown.Item>
@@ -78,7 +73,7 @@ class Lobby extends Component {
           <Dropdown.Item onClick={() => { this.setState({round: 8}) }}>8</Dropdown.Item>
         </DropdownButton>
         <label>Time to think in seconds</label>
-        <DropdownButton variant="info" id="dropdown-item-button" title={this.state.think} className="mb-2">
+        <DropdownButton variant="info" id="dropdown-item-button" title={this.state.think} className="mb-2" disabled={this.state.client.admin ? false : true}>
           <Dropdown.Item onClick={() => { this.setState({think: 40}) }}>40</Dropdown.Item>
           <Dropdown.Item onClick={() => { this.setState({think: 50}) }}>50</Dropdown.Item>
           <Dropdown.Item onClick={() => { this.setState({think: 60}) }}>60</Dropdown.Item>
@@ -87,7 +82,7 @@ class Lobby extends Component {
           <Dropdown.Item onClick={() => { this.setState({think: 90}) }}>90</Dropdown.Item>
         </DropdownButton>
         <label>Time to vote in seconds</label>
-        <DropdownButton variant="info" id="dropdown-item-button" title={this.state.vote} className="mb-2">
+        <DropdownButton variant="info" id="dropdown-item-button" title={this.state.vote} className="mb-2" disabled={this.state.client.admin ? false : true}>
           <Dropdown.Item onClick={() => { this.setState({vote: 40}) }}>40</Dropdown.Item>
           <Dropdown.Item onClick={() => { this.setState({vote: 50}) }}>50</Dropdown.Item>
           <Dropdown.Item onClick={() => { this.setState({vote: 60}) }}>60</Dropdown.Item>
@@ -96,7 +91,7 @@ class Lobby extends Component {
           <Dropdown.Item onClick={() => { this.setState({vote: 90}) }}>90</Dropdown.Item>
         </DropdownButton>
         <label>Language</label>
-        <DropdownButton variant="info" id="dropdown-item-button" title={this.state.language} className="mb-2">
+        <DropdownButton variant="info" id="dropdown-item-button" title={this.state.language} className="mb-2" disabled={this.state.client.admin ? false : true}>
           <Dropdown.Item onClick={() => { this.setState({language: "English"}) }}>English</Dropdown.Item>
           <Dropdown.Item onClick={() => { this.setState({language: "French"}) }}>French</Dropdown.Item>
         </DropdownButton>
@@ -118,18 +113,29 @@ class Lobby extends Component {
               <Col sm={7}>
                 <Row >
                   {this.state.players && this.state.players.map((player, idx) => {
-                      return (
-                        <Col className="mx-auto" sm={4} key={idx}>
-                          <img alt="avatar" className="avatar" src={emotion} />
-                          <p className="text-center">{player._userName}</p>
-                        </Col>
-                      )
+                      if (player.admin) {
+                        return (
+                          <Col className="mx-auto" sm={4} key={idx}>
+                            <img alt="avatar" className="avatar" src={require('../assets/' + player.avatar)} />
+                            <img alt="admin" className="crown" src={admin} />
+                            <p className="text-center">{player.username}</p>
+                          </Col>
+                        )
+                      }
+                      else {
+                        return (
+                          <Col className="mx-auto" sm={4} key={idx}>
+                            <img alt="avatar" className="avatar" src={require('../assets/' + player.avatar)} />
+                            <p className="text-center">{player.username}</p>
+                          </Col>
+                        )
+                      }
                     })
                   }
                 </Row>
               </Col>
             </Row>
-            <Button className="mt-3" variant="outline-warning" onClick={() => {window.location = "/game/"}}>Start</Button>
+            <Button className="mt-3" variant="outline-warning" disabled={this.state.client.admin ? false : true}>Start</Button>
           </Card.Body>
           {this.copiedMsg()}
         </Card>

@@ -12,11 +12,11 @@ class Home extends Component {
   constructor(props) {
     super(props);
 
-    console.log("props = ", props)
-    console.log("props key = ", props.match.params.key) //TODO if undefined admin true else if (key exist on database ) admin false  else false
     this.state = {
       username: '',
-      key: props.match.params.key
+      key: props.match.params.key,
+      idx: 0,
+      avatar: ['dead.png', 'laugh.png', 'tired.png']
     }
     this.handleChange = this.handleChange.bind(this);
   }
@@ -25,78 +25,32 @@ class Home extends Component {
     this.setState({username: event.target.value});
   }
 
-  // async loginUser() {
-  //   // const { cookies } = this.props;
-  //
-  //   try {
-  //     var res = await login(this.state.username, "dead.png", true);
-  //     console.log("HALLO", res);
-  //
-  //     if (res == "KO")
-  //     {
-  //       // this.setState({notification: true, notificationText: res.error, color: 'warning', loading: false});
-  //       console.log("ERROR");
-  //     }
-  //     else
-  //     {
-  //       // cookies.set('firstname',res.firstname);
-  //       // cookies.set('active', true);
-  //       console.log("successful");
-  //       window.location = "/lobby/" + res.msg;
-  //
-  //     }
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
-  // }
-
   loginUserCreate() {
-    // console.log("global socket = ", global.socket);
 
-    //TODO display error if name empty
-    //TODO check name length
-    // global.socket.emit('addPlayer', this.state.username, "dead.png", this.state.key);
-    // global.socket.on('addPlayerSuccess', (data) => {
-    //   if (data.success)
-    //   {
-    //     if (!this.state.key)
-    //       window.location = "/lobby/" + data.player.lobbyKey;
-    //     else
-    //       window.location = "/lobby/" + this.state.key; //TODO let's say it's correct
-    //   }
-    //   else {
-    //     console.log("show message")
-    //   }
-    // });
-
-    global.socket.emit('addPlayer', this.state.username, "dead.png", this.state.key);
-    global.socket.on('addPlayerSuccess', (data) => {
-      console.log("socket = ", global.socket);
-      console.log("data = ", data);
-    });
-    global.socket.emit('createLobby', this.state.key);
-    global.socket.on('createLobbySuccess', (data) => {
-      console.log("socket2 = ", global.socket);
-      console.log("createLobby = ", data);
-      // window.location = "/lobby/" + this.response.key;
-      if (data.success)
-        history.push({pathname: '/lobby/' +  data.response.key, state: {game: data.response}});
+    global.socket.emit('addPlayer', this.state.username, this.state.avatar[this.state.idx], this.state.key);
+    global.socket.on('addPlayerSuccess', (dataPlayer) => {
+      if (dataPlayer.success) {
+        global.socket.emit('createLobby', this.state.key);
+        global.socket.on('createLobbySuccess', (data) => {
+          dataPlayer.response.admin = true;
+          if (data.success)
+            history.push({pathname: '/lobby/' +  data.response.key, state: {game: data.response, player: dataPlayer.response}});
+        });
+      }
     });
   }
 
   loginUserJoin() {
 
-    global.socket.emit('addPlayer', this.state.username, "dead.png", this.state.key);
-    global.socket.on('addPlayerSuccess', (data) => {
-      console.log("socket = ", global.socket);
-      console.log("data = ", data);
-    });
-    global.socket.emit('joinLobby', this.state.key);
-    global.socket.on('joinLobbySuccess', (data) => {
-      console.log("socket = ", global.socket);
-      console.log("joinLobbySuccess = ", data);
-      if (data.success)
-        history.push({pathname: '/lobby/' + this.state.key, state: {game: data.response}});
+    global.socket.emit('addPlayer', this.state.username, this.state.avatar[this.state.idx], this.state.key);
+    global.socket.on('addPlayerSuccess', (dataPlayer) => {
+      if (dataPlayer.success) {
+        global.socket.emit('joinLobby', this.state.key);
+        global.socket.on('joinLobbySuccess', (data) => {
+          if (data.success)
+            history.push({pathname: '/lobby/' + this.state.key, state: {game: data.response, player: dataPlayer.response}});
+        });
+      }
     });
   }
 
@@ -113,7 +67,10 @@ class Home extends Component {
               <input type="text" name="name" value={this.state.username} onChange={this.handleChange}/>
             </form>
             <Col className="w-50 mx-auto mt-4 mb-4">
-              <Carousel className="w-25 mx-auto" indicators={false}>
+              <Carousel className="w-25 mx-auto" indicators={false} activeIndex={this.state.idx}
+                onSelect={ (selected, idx) => {
+                    this.setState({idx: selected});
+                }}>
                 <Carousel.Item>
                   <img
                     className="d-block w-100"
@@ -142,7 +99,7 @@ class Home extends Component {
                   this.loginUserCreate();
                 else
                   this.loginUserJoin();
-              }}>Create private room</Button>
+              }}>{this.state.key ? "Join private room" : "Create private room"}</Button>
           </Card.Body>
         </Card>
       </Container>

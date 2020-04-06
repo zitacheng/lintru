@@ -5,7 +5,7 @@
 class Player {
   constructor(userName, socket, avatar, urlKey) {
     this._userName = userName;
-    this._admin = false; //todo test
+    this._admin = false;
     this._id = socket.id;
     this._avatar = avatar;
     this._word = null;
