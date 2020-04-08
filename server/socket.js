@@ -6,4 +6,6 @@ module.exports = (socket, globalData) => {
   require('./Events/playerEvents')(socket, globalData);
   // Room events:
   require('./Events/lobbyEvents')(socket, globalData);
+  // Game events:
+  require('./Events/gameEvents')(socket, globalData);
 }

@@ -18,6 +18,8 @@ class Home extends Component {
       idx: 0,
       avatar: ['dead.png', 'laugh.png', 'tired.png']
     }
+    console.log("global socket = ", global.socket);
+
     this.handleChange = this.handleChange.bind(this);
   }
 
@@ -26,7 +28,6 @@ class Home extends Component {
   }
 
   loginUserCreate() {
-
     global.socket.emit('addPlayer', this.state.username, this.state.avatar[this.state.idx], this.state.key);
     global.socket.on('addPlayerSuccess', (dataPlayer) => {
       if (dataPlayer.success) {

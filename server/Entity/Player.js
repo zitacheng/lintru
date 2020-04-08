@@ -10,6 +10,7 @@ class Player {
     this._avatar = avatar;
     this._word = null;
     this._intru = false;
+    this._describe = "AFK";
   }
   //TODO test and add rest of the getter and setter
 
@@ -60,6 +61,23 @@ class Player {
   set userName(userName) {
     this._userName = userName;
     console.log("User name set to " + userName);
+  }
+
+  /**
+   * Get the describe.
+   * @returns {string}
+   */
+  get descripe() {
+    return this._describe;
+  }
+
+  /**
+   * Set the describe.
+   * @param userName
+   */
+  set descripe(desc) {
+    this._describe = desc;
+    console.log("descripe name set to " + desc);
   }
 
   /**
@@ -119,6 +137,8 @@ class Player {
       avatar: this._avatar,
       word: this._word,
       intru: this._intru,
+      id: this._id,
+      describe: this._describe,
     };
   }
 }

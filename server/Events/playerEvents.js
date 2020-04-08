@@ -36,25 +36,35 @@ module.exports = (socket, globalData) => {
 
   // Client disconnect
   socket.on('disconnect', () => {
-    console.log("socker logout name = ", socket.player)
-    if (socket.player) {
-      if (socket.lobby) {
-        // If the lobby has only one user, we are removing the lobby.
-        if (socket.lobby.players.length === 1) {
-          let lobbyIdx = globalData.lobbyList.indexOf(socket.lobby);
-          console.log("before splice");  //TODO
-          // if (lobbyIdx !== -1) {
-          //   globalData.lobbyList.splice(lobbyIdx, 1);
-          // }
-        } else{
-          // TODO: Set the next player to admin.
-          let userTarget = socket.lobby._players.find(function (player) {
-              return player._id === socket.id;
-          });
-          socket.lobby.removePlayer(userTarget);
-        }
-      }
-      console.log("logout ");
-    }
+    console.log("socker logout name = ", socket.player);
+    // socket.socket.connect();
+    // if (socket.player) {
+    //   if (socket.lobby) {
+    //     // If the lobby has only one user, we are removing the lobby.
+    //     if (socket.lobby.players.length === 1) {
+    //       let lobbyIdx = globalData.lobbyList.indexOf(socket.lobby);
+    //       console.log("before splice");  //TODO
+    //       // if (lobbyIdx !== -1) {
+    //       //   globalData.lobbyList.splice(lobbyIdx, 1);
+    //       // }
+    //     } else{
+    //       // TODO: Set the next player to admin.
+    //       let userTarget = socket.lobby._players.find(function (player) {
+    //           return player._id === socket.id;
+    //       });
+    //       socket.lobby.removePlayer(userTarget);
+    //     }
+    //   }
+    //   console.log("logout ");
+    // }
+  });
+
+  socket.on('test', () => {
+    console.log("test player = ", socket.id);
+    // console.log("HOLD ", globalData.listPlayer);
+    let playerById = globalData.listPlayer.find(function (player) {
+      return player.id === socket.id;
+    });
+    console.log("player found = ", playerById);
   });
 };

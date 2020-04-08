@@ -11,7 +11,7 @@ class Lobby {
     this._round = 4;
     this._timeThink = 30;
     this._timeVote = 30;
-    this._lang = 'fr';
+    this._lang = 'Francais';
     this._start = false;
   }
 
@@ -137,6 +137,13 @@ class Lobby {
     return this._users.find(function (user) {
       return user.admin === true;
     });
+  }
+
+  setSettings(round, lang, vote, think) {
+    this._round = round;
+    this._lang = lang;
+    this._timeVote = vote;
+    this._timeThink = think;
   }
 
   toResult() {

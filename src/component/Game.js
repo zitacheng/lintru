@@ -3,7 +3,9 @@ import Card from 'react-bootstrap/Card';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import Modal from 'react-bootstrap/Modal';
 import Alert from 'react-bootstrap/Alert';
+import Button from 'react-bootstrap/Button';
 import emotion from "../assets/emotion.png"
 import tired from "../assets/tired.png"
 import sick from "../assets/sick.png"
@@ -17,46 +19,14 @@ class Game extends Component {
     super(props);
 
     this.state = {
-      word: "banana",
+      describe: "",
       vote: false,
-      players: [{
-          name: "zita",
-          icon: "tired",
-          id: 0,
-          word: "jaune"
-        },{
-          name: "titi",
-          icon: "laugh",
-          id: 1,
-          word: "fruit"
-        },{
-          name: "alicia",
-          icon: "emotion",
-          id: 2,
-          word: "nourriture"
-        },{
-          name: "melissa",
-          icon: "sick",
-          id: 3,
-          word: "fruit"
-        },{
-          name: "titi",
-          icon: "laugh",
-          id: 1,
-          word: "fruit"
-        },{
-          name: "alicia",
-          icon: "emotion",
-          id: 2,
-          word: "nourriture"
-        },{
-          name: "melissa",
-          icon: "sick",
-          id: 3,
-          word: "fruit"
-        }
-      ]
+      modal: true,
+      game: props.location.state.game,
+      players: props.location.state.game.players,
+      client:  props.location.state.client,
     };
+    this.handleChange = this.handleChange.bind(this);
 
   }
 
@@ -65,13 +35,13 @@ class Game extends Component {
       return(
         <React.Fragment key={player.id}>
           <Col xs={1} className="mb-4">
-            <img alt="avatar" className="avatar" src={require("../assets/" + player.icon + ".png")} />
-            <p className="text-center">{player.name}</p>
+            <img alt="avatar" className="avatar" src={require("../assets/" + player.avatar)} />
+            <p className="text-center">{player.username}</p>
           </Col>
           <Col xs={3} className="text-left float-left">
             {this.state.vote ?
               <Alert variant="info">
-                {player.word}
+                {player.describe}
               </Alert> : <img alt="writting" className="avatar" src={writting} />}
           </Col>
         </React.Fragment>)
@@ -102,9 +72,38 @@ class Game extends Component {
     );
   }
 
+  handleChange(event) {
+    this.setState({describe: event.target.value});
+  }
+
+  showModal() {
+    return (
+      <Modal
+        size="sm"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+        show={this.state.modal}
+      >
+        <Modal.Header>
+          <Modal.Title id="contained-modal-title-vcenter">
+            Your word is {this.state.client.word}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>Decribe your word</p>
+          <form>
+            <input className="wordInput" type="text" name="describe" value={this.state.describe} onChange={this.handleChange}/>
+          </form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="warning" onClick={() => {this.setState({modal: false})}}>submit</Button>
+        </Modal.Footer>
+      </Modal>
+    );
+  }
 
   render() {
-    const { word, vote } = this.state;
+    const { client, vote } = this.state;
 
     return (
       <Container className="mt-4 mx-auto" fluid>
@@ -113,16 +112,16 @@ class Game extends Component {
             <Card className="text-center" bg="dark" text="light">
               <Card.Header className="font-weight-bold">LINTRU</Card.Header>
               <Card.Body className="pr-2">
-                <Card.Title>Your word: {word}</Card.Title>
+                <Card.Title>Your word: {client.word}</Card.Title>
                 <Countdown date={Date.now() + 30000} ref={el => this.countdown = el}
                   renderer={({hours, minutes, seconds, completed}) => {
                     return <span>{seconds}</span>;
                   }}
-                  onComplete={(test) => {
+                  onComplete={() => {
                     this.setState({vote: !vote});
                     // this.start();
                     console.log("this.countdown = ", this.countdown);
-                    this.countdown.start();
+                    // this.countdown.start();
                   }}
                 />
                 <Row className="mb-4 mt-4 pb-4">
@@ -132,6 +131,7 @@ class Game extends Component {
             </Card>
           </Col>
           {this.showVote()}
+          {this.showModal()}
         </Row>
       </Container>
     );

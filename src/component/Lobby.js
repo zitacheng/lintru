@@ -13,6 +13,7 @@ import admin from "../assets/admin.gif"
 import tired from "../assets/tired.png"
 import sick from "../assets/sick.png"
 import {CopyToClipboard} from 'react-copy-to-clipboard';
+import history from './../history';
 
 class Lobby extends Component {
 
@@ -20,23 +21,23 @@ class Lobby extends Component {
     super(props);
 
     this.state = {
-      round: 4,
-      language: "French",
-      vote: 30,
-      think: 30,
       key: props.location.state.game.key,
+      game: props.location.state.game,
       players: props.location.state.game.players,
       client:  props.location.state.player
     }
-
-    console.log("client = ", this.state.client);
-    console.log("players = ", this.state.players);
   }
 
   componentDidMount() {
     global.socket.on("join/" + this.state.key, (data) => {
         console.log("New join data 1 = ", data);
         this.setState({players: data.lobby.players});
+    });
+
+    global.socket.on('startGameSuccess/' + this.state.key, (data) => {
+      console.log("onstartgamesuccess data = ", data);
+      var res = data.game.players.find(player => player.id === this.state.client.id);
+      history.push({pathname: '/game/' +  data.game.key, state: {game: data.game, client: res}});
     });
   }
 
@@ -64,41 +65,46 @@ class Lobby extends Component {
     return (
       <Col sm={5}>
         <label>Rounds</label>
-        <DropdownButton variant="info" id="dropdown-item-button" title={this.state.round} className="mb-2" disabled={this.state.client.admin ? false : true}>
-          <Dropdown.Item onClick={() => { this.setState({round: 3}) }}>3</Dropdown.Item>
-          <Dropdown.Item onClick={() => { this.setState({round: 4}) }}>4</Dropdown.Item>
-          <Dropdown.Item onClick={() => { this.setState({round: 5}) }}>5</Dropdown.Item>
-          <Dropdown.Item onClick={() => { this.setState({round: 6}) }}>6</Dropdown.Item>
-          <Dropdown.Item onClick={() => { this.setState({round: 7}) }}>7</Dropdown.Item>
-          <Dropdown.Item onClick={() => { this.setState({round: 8}) }}>8</Dropdown.Item>
+        <DropdownButton variant="info" id="dropdown-item-button" title={this.state.game.round} className="mb-2" disabled={this.state.client.admin ? false : true}>
+          <Dropdown.Item onClick={() => { this.setState({game: {...this.state.game, round: 3}}) }}>3</Dropdown.Item>
+          <Dropdown.Item onClick={() => { this.setState({game: {...this.state.game, round: 4}}) }}>4</Dropdown.Item>
+          <Dropdown.Item onClick={() => { this.setState({game: {...this.state.game, round: 5}}) }}>5</Dropdown.Item>
+          <Dropdown.Item onClick={() => { this.setState({game: {...this.state.game, round: 6}}) }}>6</Dropdown.Item>
+          <Dropdown.Item onClick={() => { this.setState({game: {...this.state.game, round: 7}}) }}>7</Dropdown.Item>
+          <Dropdown.Item onClick={() => { this.setState({game: {...this.state.game, round: 8}}) }}>8</Dropdown.Item>
         </DropdownButton>
         <label>Time to think in seconds</label>
-        <DropdownButton variant="info" id="dropdown-item-button" title={this.state.think} className="mb-2" disabled={this.state.client.admin ? false : true}>
-          <Dropdown.Item onClick={() => { this.setState({think: 40}) }}>40</Dropdown.Item>
-          <Dropdown.Item onClick={() => { this.setState({think: 50}) }}>50</Dropdown.Item>
-          <Dropdown.Item onClick={() => { this.setState({think: 60}) }}>60</Dropdown.Item>
-          <Dropdown.Item onClick={() => { this.setState({think: 70}) }}>70</Dropdown.Item>
-          <Dropdown.Item onClick={() => { this.setState({think: 80}) }}>80</Dropdown.Item>
-          <Dropdown.Item onClick={() => { this.setState({think: 90}) }}>90</Dropdown.Item>
+        <DropdownButton variant="info" id="dropdown-item-button" title={this.state.game.timeThink} className="mb-2" disabled={this.state.client.admin ? false : true}>
+          <Dropdown.Item onClick={() => {this.setState({game: {...this.state.game, timeThink: 40}}) }}>40</Dropdown.Item>
+          <Dropdown.Item onClick={() => {this.setState({game: {...this.state.game, timeThink: 50}}) }}>50</Dropdown.Item>
+          <Dropdown.Item onClick={() => {this.setState({game: {...this.state.game, timeThink: 60}}) }}>60</Dropdown.Item>
+          <Dropdown.Item onClick={() => {this.setState({game: {...this.state.game, timeThink: 70}}) }}>70</Dropdown.Item>
+          <Dropdown.Item onClick={() => {this.setState({game: {...this.state.game, timeThink: 80}}) }}>80</Dropdown.Item>
+          <Dropdown.Item onClick={() => {this.setState({game: {...this.state.game, timeThink: 90}}) }}>90</Dropdown.Item>
         </DropdownButton>
         <label>Time to vote in seconds</label>
-        <DropdownButton variant="info" id="dropdown-item-button" title={this.state.vote} className="mb-2" disabled={this.state.client.admin ? false : true}>
-          <Dropdown.Item onClick={() => { this.setState({vote: 40}) }}>40</Dropdown.Item>
-          <Dropdown.Item onClick={() => { this.setState({vote: 50}) }}>50</Dropdown.Item>
-          <Dropdown.Item onClick={() => { this.setState({vote: 60}) }}>60</Dropdown.Item>
-          <Dropdown.Item onClick={() => { this.setState({vote: 70}) }}>70</Dropdown.Item>
-          <Dropdown.Item onClick={() => { this.setState({vote: 80}) }}>80</Dropdown.Item>
-          <Dropdown.Item onClick={() => { this.setState({vote: 90}) }}>90</Dropdown.Item>
+        <DropdownButton variant="info" id="dropdown-item-button" title={this.state.game.timeVote} className="mb-2" disabled={this.state.client.admin ? false : true}>
+          <Dropdown.Item onClick={() => {this.setState({game: {...this.state.game, timeVote: 40}}) }}>40</Dropdown.Item>
+          <Dropdown.Item onClick={() => {this.setState({game: {...this.state.game, timeVote: 50}}) }}>50</Dropdown.Item>
+          <Dropdown.Item onClick={() => {this.setState({game: {...this.state.game, timeVote: 60}}) }}>60</Dropdown.Item>
+          <Dropdown.Item onClick={() => {this.setState({game: {...this.state.game, timeVote: 70}}) }}>70</Dropdown.Item>
+          <Dropdown.Item onClick={() => {this.setState({game: {...this.state.game, timeVote: 80}}) }}>80</Dropdown.Item>
+          <Dropdown.Item onClick={() => {this.setState({game: {...this.state.game, timeVote: 90}}) }}>90</Dropdown.Item>
         </DropdownButton>
         <label>Language</label>
-        <DropdownButton variant="info" id="dropdown-item-button" title={this.state.language} className="mb-2" disabled={this.state.client.admin ? false : true}>
-          <Dropdown.Item onClick={() => { this.setState({language: "English"}) }}>English</Dropdown.Item>
-          <Dropdown.Item onClick={() => { this.setState({language: "French"}) }}>French</Dropdown.Item>
+        <DropdownButton variant="info" id="dropdown-item-button" title={this.state.game.lang} className="mb-2" disabled={this.state.client.admin ? false : true}>
+          <Dropdown.Item onClick={() => {this.setState({game: {...this.state.game, lang: "English"}}) }}>English</Dropdown.Item>
+          <Dropdown.Item onClick={() => {this.setState({game: {...this.state.game, lang: "Francais"}}) }}>French</Dropdown.Item>
         </DropdownButton>
       </Col>
     );
   }
 
+  startGame() {
+
+    console.log("game = ", this.state.game);
+    global.socket.emit('startGame', this.state.game, this.state.players);
+  }
 
   render() {
 
@@ -135,7 +141,7 @@ class Lobby extends Component {
                 </Row>
               </Col>
             </Row>
-            <Button className="mt-3" variant="outline-warning" disabled={this.state.client.admin ? false : true}>Start</Button>
+            <Button className="mt-3" variant="outline-warning" disabled={this.state.client.admin ? false : true} onClick={() => {this.startGame()}}>Start</Button>
           </Card.Body>
           {this.copiedMsg()}
         </Card>

@@ -11,10 +11,10 @@ function App() {
     <div className="App">
       <Router history={history}>
         <Switch>
-          <Route exact path="/" component={Home} /> //TODO maybe to an Home/:key link to send to other player
-          <Route exact path="/:key" component={Home} /> //TODO maybe to an Home/:key link to send to other player / how to set params or props
+          <Route exact path="/home" component={Home} /> //TODO maybe to an Home/:key link to send to other player
+          <Route exact path="/home/:key" component={Home} /> //TODO maybe to an Home/:key link to send to other player / how to set params or props
           <Route exact path="/lobby/:key" component={Lobby} /> // TODO show home page as well but depends on the url id existence it will either join a lobby or create a new lobby
-          <Route exact path="/game" component={Game} />
+          <Route exact path="/game/:key" component={Game} />
         </Switch>
       </Router>
     </div>

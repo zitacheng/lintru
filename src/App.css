@@ -65,3 +65,8 @@ button, input {
 .carousl-indicators {
   display: none;
 }
+
+.wordInput {
+  border-color: grey;
+  border-width: 1px;
+}

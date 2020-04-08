@@ -8,7 +8,6 @@ var app = require('../app');
 var debug = require('debug')('server:server');
 var http = require('http');
 var mongoose = require('mongoose');
-// var app = require('http').createServer(handler)
 
 /**
  * Get port from environment and store in Express.
@@ -36,34 +35,34 @@ server.on('listening', onListening);
   */
 
 
-mongoose.connect('mongodb://localhost/linytu', {useNewUrlParser: true});
-
-var db = mongoose.connection;
-
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function() {
-
-  var playerSchema = new mongoose.Schema({
-    name: String,
-    admin: Boolean,
-    avatar: String,
-    word: String,
-    intru: Boolean,
-    lobbyKey: String
-  });
-
-  mongoose.model('Player', playerSchema);
-
-  var gameSchema = new mongoose.Schema({
-    url: String,
-    round: Number,
-    timeThink: Number,
-    timeVote: Number,
-    lang: String,
-  });
-
-  mongoose.model('Game', gameSchema);
-});
+// mongoose.connect('mongodb://localhost/linytu', {useNewUrlParser: true});
+//
+// var db = mongoose.connection;
+//
+// db.on('error', console.error.bind(console, 'connection error:'));
+// db.once('open', function() {
+//
+//   var playerSchema = new mongoose.Schema({
+//     name: String,
+//     admin: Boolean,
+//     avatar: String,
+//     word: String,
+//     intru: Boolean,
+//     lobbyKey: String
+//   });
+//
+//   mongoose.model('Player', playerSchema);
+//
+//   var gameSchema = new mongoose.Schema({
+//     url: String,
+//     round: Number,
+//     timeThink: Number,
+//     timeVote: Number,
+//     lang: String,
+//   });
+//
+//   mongoose.model('Game', gameSchema);
+// });
 
 /**
  *  Socket IO
@@ -71,8 +70,6 @@ db.once('open', function() {
 
 const io = require('socket.io')(server);
 var shortid = require('shortid');
-
-var allClients = [];
 
 var globalData = {
   lobbyList: [],
