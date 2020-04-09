@@ -30,17 +30,40 @@ class Game extends Component {
 
   }
 
+  componentDidMount() {
+
+    global.socket.on('accuseThisPersonSuccess/' + this.state.game.key, (data) => {
+        console.log(" accuseThisPersonSuccess data = ", data);
+    });
+    global.socket.on('submitAnswerSuccess/' + this.state.game.key, (data) => {
+      console.log(" data = ", data);
+      this.state.players = data.players;
+      let allDone = true;
+
+      data.players.forEach((player) => {
+        console.log("player = ", player)
+        if (!player.submited)
+          allDone = false;
+      });
+      if (allDone)
+        this.setState({vote: true});
+      console.log("all done = ", allDone);
+    });
+  }
+
   listPlayers() {
     return (this.state.players.map(player => {
       return(
         <React.Fragment key={player.id}>
-          <Col xs={1} className="mb-4">
+          <Col className="mb-4">
             <img alt="avatar" className="avatar" src={require("../assets/" + player.avatar)} />
             <p className="text-center">{player.username}</p>
           </Col>
-          <Col xs={3} className="text-left float-left">
+          <Col className="text-left float-left">
             {this.state.vote ?
-              <Alert variant="info">
+              <Alert variant="info" className="describeButton" onClick={() => {
+                global.socket.emit('accuseThisPerson', this.state.game, this.state.players, this.state.client, player);
+              }}>
                 {player.describe}
               </Alert> : <img alt="writting" className="avatar" src={writting} />}
           </Col>
@@ -96,7 +119,10 @@ class Game extends Component {
           </form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="warning" onClick={() => {this.setState({modal: false})}}>submit</Button>
+          <Button variant="warning" onClick={() => {
+              global.socket.emit('submitAnswer', this.state.game, this.state.players, this.state.client, this.state.describe);
+              this.setState({modal: false});
+            }}>submit</Button>
         </Modal.Footer>
       </Modal>
     );
@@ -118,7 +144,7 @@ class Game extends Component {
                     return <span>{seconds}</span>;
                   }}
                   onComplete={() => {
-                    this.setState({vote: !vote});
+                    this.setState({vote: !vote, modal: false});
                     // this.start();
                     console.log("this.countdown = ", this.countdown);
                     // this.countdown.start();

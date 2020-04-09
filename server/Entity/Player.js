@@ -11,6 +11,9 @@ class Player {
     this._word = null;
     this._intru = false;
     this._describe = "AFK";
+    this._accusedBy = [];
+    this._submited = false;
+    this._score = 0;
   }
   //TODO test and add rest of the getter and setter
 
@@ -44,6 +47,38 @@ class Player {
    */
   set admin(pAdmin) {
     this._admin = pAdmin;
+  }
+
+  /**
+   * Get true if the user submitted answer.
+   * @returns {boolean}
+   */
+  get submited() {
+    return this._submited;
+  }
+
+  /**
+   * Set submitted status
+   * @param sub
+   */
+  set submited(sub) {
+    this._submited = sub;
+  }
+
+  /**
+   * Get score
+   * @returns {int}
+   */
+  get score() {
+    return this._score;
+  }
+
+  /**
+   * Set score
+   * @param nb
+   */
+  set score(nb) {
+    this._submited += nb;
   }
 
   /**
@@ -130,6 +165,18 @@ class Player {
     this._intru = intru;
   }
 
+  /**
+   * Get people who accused me being the spy
+   * @returns {array}
+   */
+  get accusedBy() {
+    return this._accusedBy;
+  }
+
+  set (accusedBy) {
+    this._accusedBy = people;
+  }
+
   toResult() {
     return {
       username: this._userName,
@@ -139,6 +186,9 @@ class Player {
       intru: this._intru,
       id: this._id,
       describe: this._describe,
+      accusedBy: this._accusedBy,
+      submited: this._submited,
+      score: this._score,
     };
   }
 }

@@ -70,3 +70,7 @@ button, input {
   border-color: grey;
   border-width: 1px;
 }
+
+.describeButton:hover {
+  cursor: pointer;;
+}
